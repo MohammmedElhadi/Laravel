@@ -22,10 +22,8 @@ class CategoryController extends Controller
         $subcat = array();
         $cats = Category::find($ids);
         foreach ($cats as $cat){
-//            dd($cat->subcategories->toArray());
             $subcat = array_merge($subcat , $cat->subcategories->toArray() );
         }
-//        dd($subcat);
         return response()->json($subcat);
     }
 

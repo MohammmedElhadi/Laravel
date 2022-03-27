@@ -92,7 +92,6 @@ class MarqueController extends Controller
         foreach ($marques as $marque){
             $models = array_merge($models , $marque->modeles->toArray() );
         }
-
         return response()->json($models);
     }
 

@@ -36,7 +36,8 @@ class ReponseController extends Controller
 
         $reponse = Demande::find($demand_id)->reponses()->where('user_id', Auth::id())->first();
         if ($reponse) {
-            $url = $reponse->image ? "storage/" . $reponse->image->url : '';
+//            $url = $reponse->image ? "storage/" . $reponse->image->url : '';
+            $url = $reponse->demande->getMedia()[0]->getUrl();
             return response()->json(["reponse" => $reponse,
                 "image" => asset($url)
             ]);

@@ -64,10 +64,9 @@ class DemandeController extends Controller
      */
     public function store(Request $request)
     {
-
+//        dd($request->file('image'));
         DB::beginTransaction();
         try {
-            //dd($request->demand);
             $demande = Demande::create([
                 'user_id'=> Auth::id(),
                 'wilaya_id' => $request->wilaya,
@@ -75,15 +74,21 @@ class DemandeController extends Controller
                 'etat_id' => $request->etat,
                 'note' => $request->note
             ]);
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $url = $file->store('demandes');
-                $image = Image::create([
-                    'url' => $url,
-                    'imageable_id' => $demande->id,
-                    'imageable_type' => 'App\Models\Demande'
-                ]);
-            }
+//            if ($request->hasFile('image')) {
+//                $file = $request->file('image');
+//                $url = $file->store('demandes');
+//                $image = Image::create([
+//                    'url' => $url,
+//                    'imageable_id' => $demande->id,
+//                    'imageable_type' => 'App\Models\Demande'
+//                ]);
+//            }
+//            if ($request->hasFile('image')) {
+//                $file = $request->file('image');
+//                $demande->addMedia($file)
+//                        ->toMediaCollection();
+//                dd($demande->getMedia());
+//            }
 
 
             $demande->categories()->attach($request['categories']);
@@ -96,6 +101,7 @@ class DemandeController extends Controller
             $demande->notify_interresters();
             DB::commit();
         } catch (Exception $e) {
+            return response()->json($e , 500);
             DB::rollBack();
         }
         return response()->json($demande->id);
@@ -127,6 +133,9 @@ class DemandeController extends Controller
                                               false,
                 'likes'   => $demande->viewers()->wherePivot('is_saved' , 1)->count(),
         ]);
+        if($demande->getMedia()){
+                dd($demande->getMedia()[0]->getUrl());
+        }
         return response()->json($data);
     }
 
@@ -253,16 +262,20 @@ class DemandeController extends Controller
                 'prix_offert' => $request->prix_offert,
                 'note' => $request->note,
             ]);
+//            if ($request->hasFile('image')) {
+//                $file = $request->file('image');
+//                $url = $file->store('reponses');
+//                $image = Image::create([
+//                    'url' => $url,
+//                    'imageable_id' => $offer->id,
+//                    'imageable_type' => 'App\Models\Reponse'
+//                ]);
+//            }
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $url = $file->store('reponses');
-                $image = Image::create([
-                    'url' => $url,
-                    'imageable_id' => $offer->id,
-                    'imageable_type' => 'App\Models\Reponse'
-                ]);
+                $offer->addMedia($file)
+                    ->toMediaCollection();
             }
-
             DB::commit();
         }catch (Exception $e) {
             DB::rollBack();
