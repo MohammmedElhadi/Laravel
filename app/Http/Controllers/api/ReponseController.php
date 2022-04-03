@@ -16,13 +16,18 @@ class ReponseController extends Controller
      */
     public function getAllOffer($demand_id)
     {
+        // return response()->json($demand_id, 500);
         $data = [];
         $reponses = Demande::find($demand_id)->reponses()->orderBy('created_at',"desc")->get();
         foreach ($reponses as $reponse) {
+            $images = [];
+            foreach ($reponse->getMedia('offer_images') as $key => $image) {
+                array_push( $images , ['imageURL' => $image->getFullUrl()]);
+            }
             array_push($data, [
                 "reponse" => $reponse,
                 "etat" => $reponse->etat->nom_fr,
-                "image" => $reponse->image ? asset('storage/' . $reponse->image->url) : null,
+                "images" =>$images,
                 "phone" => $reponse->responder->phone
             ]);
         }
@@ -36,11 +41,15 @@ class ReponseController extends Controller
     {
 
         $reponse = Demande::find($demand_id)->reponses()->where('user_id', Auth::id())->first();
+        $images = [];
+            foreach ($reponse->getMedia('offer_images') as $key => $image) {
+                array_push( $images , ['imageURL' => $image->getFullUrl()]);
+            }
         if ($reponse) {
             // $url = $reponse->demande->getMedia()[0]->getUrl();
             return response()->json([
                 "reponse" => $reponse,
-                "image" => ''//asset($url)
+                "images" => $images
             ]);
         }
         return response()->json(['message' => 'Not Found!'], 404);

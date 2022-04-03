@@ -66,9 +66,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+
+        dd( User::find(11));
     }
 
     /**
@@ -103,5 +104,11 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function changeLang($lang){
+       $user=  Auth::user();
+       $user->update(['lang' => $lang]);
+       return $user->lang;
     }
 }

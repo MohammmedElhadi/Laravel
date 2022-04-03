@@ -77,6 +77,7 @@ Route::controller(Lcont::class)->group(function () {
 
 Route::controller(UserController::class)->group(function () {
     Route::post('/register', 'store')->name('user.store');
+    Route::get('/profile', 'show')->name('user.show');
 });
 
     Route::resource('demande', DemandeController::class);
