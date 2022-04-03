@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Demande;
+use App\Models\Reponse;
 use App\Models\User;
 use App\Notifications\TestNotification;
 use Illuminate\Support\Facades\Route;
@@ -16,8 +18,14 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/test', function () {
-    $user = User::find(11);
-    $user->notify(new TestNotification());
+    $demand = Reponse::find(3);
+    // $demand = Demande::find(1);
+    $images= [];
+    // dd($demand->getMedia('demand_images'));
+    foreach ($demand->getMedia('offer_images') as $key => $image) {
+        array_push( $images , $image->getFullUrl());
+    }
+    dd($images);
 });
 //
 //// Auth::routes();

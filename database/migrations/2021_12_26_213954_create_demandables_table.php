@@ -14,7 +14,9 @@ class CreateDemandablesTable extends Migration
     public function up()
     {
         Schema::create('demandables', function (Blueprint $table) {
-            $table->foreignId('demande_id');
+            $table->foreignId('demande_id') ->constrained()
+                                            ->onUpdate('cascade')
+                                            ->onDelete('cascade');
             $table->foreignId('demandable_id');
             $table->string('demandable_type');
             $table->timestamps();

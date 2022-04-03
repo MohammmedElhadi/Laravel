@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b7ad05761e800144451b87ef6ca97dc",
+    "content-hash": "d608de0d08c1abcbec8a30ebf575a3e9",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5107,6 +5107,64 @@
                 "source": "https://github.com/rinvex/tmp-watson-validating/tree/6.0.4"
             },
             "time": "2021-02-06T14:16:59+00:00"
+        },
+        {
+            "name": "sopamo/laravel-filepond",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sopamo/laravel-filepond.git",
+                "reference": "c360981b467b4507ab08ef4236e3e790fbe40963"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sopamo/laravel-filepond/zipball/c360981b467b4507ab08ef4236e3e790fbe40963",
+                "reference": "c360981b467b4507ab08ef4236e3e790fbe40963",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0|^7.0|^8.0",
+                "illuminate/http": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0|^7.0|^8.0",
+                "illuminate/routing": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0|^7.0|^8.0",
+                "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*|^6.0|^7.0|^8.0",
+                "php": "^7.0|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Sopamo\\LaravelFilepond\\LaravelFilepondServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sopamo\\LaravelFilepond\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Mohr",
+                    "email": "p.mohr@sopamo.de"
+                }
+            ],
+            "description": "Laravel backend module for filepond uploads",
+            "keywords": [
+                "filepond",
+                "image",
+                "laravel",
+                "php",
+                "upload"
+            ],
+            "support": {
+                "issues": "https://github.com/Sopamo/laravel-filepond/issues",
+                "source": "https://github.com/Sopamo/laravel-filepond/tree/v1.0"
+            },
+            "time": "2022-03-31T11:48:42+00:00"
         },
         {
             "name": "spatie/eloquent-sortable",

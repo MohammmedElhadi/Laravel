@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        "http://auto_parts.local:8080/api/upload",
     ];
 }

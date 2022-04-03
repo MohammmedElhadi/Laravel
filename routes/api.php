@@ -16,6 +16,7 @@ use App\Http\Controllers\api\ReponseController;
 use App\Http\Controllers\api\WilayaController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Broadcast;
@@ -31,7 +32,9 @@ use \Illuminate\Support\Facades\Broadcast;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+//TODO:: File uploads
+Route::post('upload', [UploadController::class, 'upload']);
+Route::delete('delete', [UploadController::class, 'delete']);
 //TODO:: Midlewares
 Route::controller(MarqueController::class)->group(function () {
     Route::post('marque/modele', 'getModeles')->name('marque.modeles');
@@ -47,6 +50,7 @@ Route::controller(DemandeController::class)->group(function () {
     Route::get('demande/my_demandes', 'MyDemandes')->name('demande.mine');
     Route::get('demande/demandesvues', 'DemandesVues')->name('demande.mine');
     Route::get('demande/demandesaime', 'DemandesAime')->name('demande.mine');
+    Route::get('demande/demandesrepondu', 'Demandesrepondue')->name('demande.mine');
     Route::get('demande/{id}/markAsSeen', 'MarkAsSeen')->name('demande.markAsSeen');
     Route::get('demande/{id}/ToggleSaved', 'ToggleSaved')->name('demande.ToggleSaved');
 
