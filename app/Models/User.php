@@ -95,7 +95,7 @@ class User extends Authenticatable
     }
     public function subcategories()
     {
-        return $this->morphedByMany(SUbcategory::class , 'interrestable')->withTimestamps();
+        return $this->morphedByMany(Subcategory::class , 'interrestable')->withTimestamps();
     }
     public function subcategories2()
     {
