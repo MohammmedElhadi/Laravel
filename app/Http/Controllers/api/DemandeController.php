@@ -98,9 +98,8 @@ class DemandeController extends Controller
      */
     public function show($id)
     {
-        $demande = Demande::find($id);
+        $demande = Demande::where('id' , $id)->get();
         if($demande){
-            $demande->get();
             $data = $this->getDemandesResponse($demande);
             return response()->json($data);
         }
@@ -260,6 +259,7 @@ class DemandeController extends Controller
     private function getDemandesResponse($demandes)
     {
         $data = [];
+        // dd($demandes);
         foreach ($demandes as $demande) {
             $images = [];
             foreach ($demande->getMedia('demand_images') as $key => $image) {

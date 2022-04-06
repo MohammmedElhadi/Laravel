@@ -70,11 +70,11 @@ class UserController extends Controller
     {
        $user = Auth::user();
        $user->categories->pluck('categories.id');
-       $user->subcategories()->pluck('subcategories.id');
-       $user->subcategories2()->pluck('subcategory2s.id');
-       $user->types()->pluck('types.id');
-       $user->marques()->pluck('marques.id');
-       $user->modeles()->pluck('modeles.id');
+       $user->subcategories->pluck('subcategories.id');
+       $user->subcategories2->pluck('subcategory2s.id');
+       $user->types->pluck('types.id');
+       $user->marques->pluck('marques.id');
+       $user->modeles->pluck('modeles.id');
 
        return response()->json($user, 200);
     }
@@ -110,9 +110,25 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $data , $id)
     {
-        //
+        $user = User::find($id);
+        DB::beginTransaction();
+        $user->update([
+            'name' => $data['name'],
+            // 'email' => $data['email'],
+            'phone' => $data['phone'],
+            'password' => Hash::make($data['password']),
+            'wilaya_id' => $data['wilaya']
+        ]);
+        $user->types()->sync($data['types']);
+        $user->marques()->sync($data['marques']);
+        $user->modeles()->sync($data['modeles']);
+        $user->categories()->sync($data['categories']);
+        $user->subcategories()->sync($data['subcategories']);
+        $user->subcategories2()->sync($data['subsubcategories']);
+        DB::commit();
+        return response()->json(Auth::user());
     }
 
     /**

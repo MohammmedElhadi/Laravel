@@ -81,6 +81,7 @@ Route::controller(Lcont::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::post('/register', 'store');//('user.store');
     Route::get('/user/profile', 'show');//('user.show');
+    Route::put('/user/update/{id} ', 'update');//('user.show');
     Route::post('/user/lang/', 'language');//('user.language');
 });
 
