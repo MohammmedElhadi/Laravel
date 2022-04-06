@@ -37,22 +37,22 @@ Route::post('upload', [UploadController::class, 'upload']);
 Route::delete('delete', [UploadController::class, 'delete']);
 //TODO:: Midlewares
 Route::controller(MarqueController::class)->group(function () {
-    Route::post('marque/modele', 'getModeles')->name('marque.modeles');
+    Route::post('marque/modele', 'getModeles');//('marque.modeles');
 });
 Route::controller(CategoryController::class)->group(function () {
-    Route::post('category/subcategories', 'getSubCategories')->name('category.subcategories');
+    Route::post('category/subcategories', 'getSubCategories');//('category.subcategories');
 });
 Route::controller(SubcategoryController::class)->group(function () {
-    Route::post('subcategory/subcategory2s', 'getSubSubCategories')->name('subcategory.subcategory2s');
+    Route::post('subcategory/subcategory2s', 'getSubSubCategories');//('subcategory.subcategory2s');
 });
 Route::controller(DemandeController::class)->group(function () {
-    Route::post('demande/{id}/offer', 'SubmitOffer')->name('demande.offer');
-    Route::get('demande/my_demandes', 'MyDemandes')->name('demande.mine');
-    Route::get('demande/demandesvues', 'DemandesVues')->name('demande.mine');
-    Route::get('demande/demandesaime', 'DemandesAime')->name('demande.mine');
-    Route::get('demande/demandesrepondu', 'Demandesrepondue')->name('demande.mine');
-    Route::get('demande/{id}/markAsSeen', 'MarkAsSeen')->name('demande.markAsSeen');
-    Route::get('demande/{id}/ToggleSaved', 'ToggleSaved')->name('demande.ToggleSaved');
+    Route::post('demande/{id}/offer', 'SubmitOffer');//('demande.offer');
+    Route::get('demande/my_demandes', 'MyDemandes');//('demande.mine');
+    Route::get('demande/demandesvues', 'DemandesVues');//('demande.vue');
+    Route::get('demande/demandesaime', 'DemandesAime');//('demande.aime');
+    Route::get('demande/demandesrepondu', 'Demandesrepondue');//('demande.mine');
+    Route::get('demande/{id}/markAsSeen', 'MarkAsSeen');//('demande.markAsSeen');
+    Route::get('demande/{id}/ToggleSaved', 'ToggleSaved');//('demande.ToggleSaved');
 
 });
 Route::controller(ReponseController::class)->group(function () {
@@ -68,16 +68,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::controller(Lcont::class)->group(function () {
-    Route::post('/login', 'authenticate')->name('user.authenticate');
+    Route::post('/login', 'authenticate');//('user.authenticate');
+});
+Route::controller(NotificationController::class)->group(function () {
+    Route::get('/notification/{id}', 'markAsRead');//('notification.markAsRead');
 });
 
 Route::controller(Lcont::class)->group(function () {
-    Route::post('/logout', 'logout')->name('user.logout');
+    Route::post('/logout', 'logout');//('user.logout');
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::post('/register', 'store')->name('user.store');
-    Route::get('/profile', 'show')->name('user.show');
+    Route::post('/register', 'store');//('user.store');
+    Route::get('/user/profile', 'show');//('user.show');
+    Route::post('/user/lang/', 'language');//('user.language');
 });
 
     Route::resource('demande', DemandeController::class);

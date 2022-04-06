@@ -68,8 +68,28 @@ class UserController extends Controller
      */
     public function show()
     {
+       $user = Auth::user();
+       $user->categories->pluck('categories.id');
+       $user->subcategories()->pluck('subcategories.id');
+       $user->subcategories2()->pluck('subcategory2s.id');
+       $user->types()->pluck('types.id');
+       $user->marques()->pluck('marques.id');
+       $user->modeles()->pluck('modeles.id');
 
-        dd( User::find(11));
+       return response()->json($user, 200);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function language(Request $lang)
+    {
+        $user = Auth::user();
+        $user->lang = $lang->abr;
+        $user->save();
+        return response()->json(Auth::user()->lang , 200);
     }
 
     /**

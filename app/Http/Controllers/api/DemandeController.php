@@ -30,7 +30,6 @@ class DemandeController extends Controller
         $demandes = Demande::orderBy('created_at', "desc")->get();
         $data = $this->getDemandesResponse($demandes);
         return $data;
-
     }
 
     /**
@@ -61,17 +60,25 @@ class DemandeController extends Controller
             ]);
 
             // $demande->addMedia($request->images)->preservingOriginal()->toMediaCollection('demand_images');
-            if($request->images){
-                foreach (explode(',' ,$request->images) as $key => $image) {
+            if ($request->images) {
+                foreach (explode(',', $request->images) as $key => $image) {
                     $demande->addMedia($image)->toMediaCollection('demand_images');
                 }
             }
             $demande->types()->attach($request['type']);
-            $demande->categories()->attach(explode(',' ,$request['categories']));
-            if($request['subcategories']){$demande->subcategories()->attach(explode(',' ,$request['subcategories']));}
-            if($request['subsubcategories']){$demande->subcategory2s()->attach(explode(',' ,$request['subsubcategories']));}
-            if($request['marques']){$demande->marques()->attach(explode(',' ,$request['marques']));}
-            if($request['modeles']){$demande->modeles()->attach(explode(',' ,$request['modeles']));}
+            $demande->categories()->attach(explode(',', $request['categories']));
+            if ($request['subcategories']) {
+                $demande->subcategories()->attach(explode(',', $request['subcategories']));
+            }
+            if ($request['subsubcategories']) {
+                $demande->subcategory2s()->attach(explode(',', $request['subsubcategories']));
+            }
+            if ($request['marques']) {
+                $demande->marques()->attach(explode(',', $request['marques']));
+            }
+            if ($request['modeles']) {
+                $demande->modeles()->attach(explode(',', $request['modeles']));
+            }
             DB::commit();
         } catch (Exception $e) {
             return response()->json($e, 500);
@@ -91,9 +98,13 @@ class DemandeController extends Controller
      */
     public function show($id)
     {
-        $demande = Demande::find($id)->get();
-        $data = $this->getDemandesResponse($demande);
-        return response()->json($data);
+        $demande = Demande::find($id);
+        if($demande){
+            $demande->get();
+            $data = $this->getDemandesResponse($demande);
+            return response()->json($data);
+        }
+        return response()->json(['Demande supprimée'], 404);
     }
 
     /**
@@ -162,7 +173,7 @@ class DemandeController extends Controller
         $reponses = Auth::user()->reponses;
         $demandes = [];
         foreach ($reponses as $key => $reponse) {
-            array_push($demandes , $reponse->demande);
+            array_push($demandes, $reponse->demande);
         }
         $data = $this->getDemandesResponse($demandes);
         return $data;
@@ -184,16 +195,16 @@ class DemandeController extends Controller
                 'prix_offert' => $request->prix_offert,
                 'note' => $request->note,
             ]);
-            if($request->images !=""){
-                foreach (explode(',' ,$request->images) as $key => $image) {
+            if ($request->images != "") {
+                foreach (explode(',', $request->images) as $key => $image) {
                     $offer->addMedia($image)->toMediaCollection('offer_images');
                 }
             }
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
-            return response()->json('error');
+
+            return response()->json('Login please' , 419);
         }
         if ($offer) {
             $offer->notify_demander();
@@ -203,21 +214,25 @@ class DemandeController extends Controller
 
     public function MarkAsSeen($id)
     {
-        $viewedDemande = Auth::user()->viewedDemandes()->where('demande_id', $id)->first();
-
-        if (!$viewedDemande) {
-            Auth::user()->viewedDemandes()->attach([$id => ['is_saved' => false]]);
+        $demande = Demande::find($id);
+        if ($demande) {
             $viewedDemande = Auth::user()->viewedDemandes()->where('demande_id', $id)->first();
+
+            if (!$viewedDemande) {
+                Auth::user()->viewedDemandes()->attach([$id => ['is_saved' => false]]);
+                $viewedDemande = Auth::user()->viewedDemandes()->where('demande_id', $id)->first();
+            }
+            return response()->json([
+                'is_saved' => $viewedDemande->pivot->is_saved,
+                'likes'    => Demande::find($id)->viewers()->wherePivot('is_saved', 1)->count()
+            ]);
+
+            $demande->viewers()->attach([Auth::id() => ['is_saved' => false]]);
+            return ($demande->viewers[0]->pivot->is_saved);
         }
-        return response()->json([
-            'is_saved' => $viewedDemande->pivot->is_saved,
-            'likes'    => Demande::find($id)->viewers()->wherePivot('is_saved', 1)->count()
-        ]);
-
-
-        $demande = Demande::findOrFail($id);
-        $demande->viewers()->attach([Auth::id() => ['is_saved' => false]]);
-        return ($demande->viewers[0]->pivot->is_saved);
+        else {
+            return response()->json(['Demande supprimée'], 404);
+        }
     }
 
     public function ToggleSaved($id)
@@ -242,12 +257,13 @@ class DemandeController extends Controller
     }
 
 
-    private function getDemandesResponse( $demandes){
+    private function getDemandesResponse($demandes)
+    {
         $data = [];
-        foreach ( $demandes as $demande) {
+        foreach ($demandes as $demande) {
             $images = [];
             foreach ($demande->getMedia('demand_images') as $key => $image) {
-                array_push( $images , ['imageURL' => $image->getFullUrl()]);
+                array_push($images, ['imageURL' => $image->getFullUrl()]);
             }
             array_push($data, [
                 'demande' => $demande,
@@ -258,7 +274,7 @@ class DemandeController extends Controller
                 'marques' => $demande->marques ? $demande->marques : '',
                 'modeles' => $demande->modeles ? $demande->modeles : '',
                 'images' => $images,
-                'responded' => Auth::user()->reponses()->where('demande_id' , $demande->id)->count()>0 ,
+                'responded' => Auth::check() ? Auth::user()->reponses()->where('demande_id', $demande->id)->count() > 0 : false,
                 "is_saved" => (Auth::check() and  $demande->viewers()->where('user_id', Auth::id())->count() > 0)
                     ?
                     $demande->viewers()->where('user_id', Auth::id())->first()->pivot->is_saved

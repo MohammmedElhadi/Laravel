@@ -21,6 +21,20 @@ class NotificationController extends Controller
             'count'         => Auth::user()->unreadNotifications()->count()
         ]);
     }
+    /**
+     * mark notification as read.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function markAsRead($id)
+    {
+       $notification = Auth::user()->notifications()->where('id' , $id)->get();
+       $notification->markAsRead();
+       return response()->json([], 200);
+    }
+
+
+
 
     /**
      * Show the form for creating a new resource.
