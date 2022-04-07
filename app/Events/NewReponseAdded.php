@@ -13,15 +13,15 @@ use Illuminate\Queue\SerializesModels;
 class NewReponseAdded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    protected $reponse;
+    public $notification;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($reponse)
+    public function __construct($notification)
     {
-        $this->reponse = $reponse;
+        $this->notification = $notification;
     }
 
     /**
@@ -31,6 +31,6 @@ class NewReponseAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('response_for_'.$this->reponse->user_id );
+        return new PrivateChannel('response_for_'.$this->notification->data['demande']['user_id']);
     }
 }

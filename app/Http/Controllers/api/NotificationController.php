@@ -16,18 +16,10 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        // dd(User::find(12)->unreadNotifications()->latest()->get());
-        $demandes = [];
-        foreach (Auth::user()->unreadNotifications()->latest()->take(10)->get() as $notification)
-        {
-            $demande = [
-                'demande'=>$notification['data']['demande'],
-                'Type'   =>$notification->type
-            ];
-            array_push($demandes , $demande);
-        }
-//         dd($demandes);
-        return ($demandes);
+        return  response()->json([
+            'notifications' => Auth::user()->unreadNotifications()->latest()->take(50)->get(),
+            'count'         => Auth::user()->unreadNotifications()->count()
+        ]);
     }
 
     /**

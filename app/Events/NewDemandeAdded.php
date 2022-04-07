@@ -16,20 +16,16 @@ class NewDemandeAdded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $data;
+    public $notification;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($demande ,$id )
+    public function __construct($notification )
     {
-        $this->data = [
-                        'demande' =>$demande,
-                        'id'      =>$id
-                     ];
-        // $this->demande = User::find(12)->notifications()->latest()->first()['data'];
+        $this->notification = $notification;
     }
 
     /**
@@ -39,6 +35,6 @@ class NewDemandeAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('demands_channel_'.$this->data['id']);
+        return new PrivateChannel('demands_channel_'.$this->notification->notifiable_id);
     }
 }

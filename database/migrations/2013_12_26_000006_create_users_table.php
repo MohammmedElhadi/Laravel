@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
                                           ->onDelete('cascade')->default(4);
             $table->string('is_admin')->default(false);
             $table->string('phone')->unique();
+            $table->enum('lang' , ['fr' , 'ar' , 'dz'])->default('ar');
             // $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

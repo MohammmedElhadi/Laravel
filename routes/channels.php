@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 Broadcast::channel('demands_channel_{id}', function ($user, $id) {
     return  Auth::id() ===  $user->id;
 });
-Broadcast::channel('reponses_channel_{id}', function ($user, $id) {
+Broadcast::channel('response_for_{id}', function ($user, $id) {
     return  Auth::id() ===  $user->id;
 });
 

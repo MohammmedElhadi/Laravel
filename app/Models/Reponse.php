@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Events\NewDemandeAdded;
+use App\Events\NewReponseAdded;
 use App\Notifications\ReponseNotification;
 use App\Notifications\TypeNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -42,6 +44,8 @@ class Reponse extends Model implements HasMedia
     }
     public function notify_demander(){
         $demander = $this->demande->demander;
-        $demander->notify(new ReponseNotification($this));
+        $demander->notify(New ReponseNotification($this));
+        $notification = $demander->unreadNotifications()->latest()->first();
+        event(new NewReponseAdded($notification));
     }
 }

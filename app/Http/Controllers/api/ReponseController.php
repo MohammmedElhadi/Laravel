@@ -17,13 +17,14 @@ class ReponseController extends Controller
     public function getAllOffer($demand_id)
     {
         $data = [];
-        $reponses = Demande::find($demand_id)->reponses;
+        $reponses = Demande::find($demand_id)->reponses()->orderBy('created_at',"desc")->get();
         foreach ($reponses as $reponse) {
-            array_push($data, ["reponse" => $reponse,
+            array_push($data, [
+                "reponse" => $reponse,
                 "etat" => $reponse->etat->nom_fr,
                 "image" => $reponse->image ? asset('storage/' . $reponse->image->url) : null,
-                "phone" => $reponse->responder->phone]);
-
+                "phone" => $reponse->responder->phone
+            ]);
         }
         return response()->json($data);
     }
@@ -36,10 +37,10 @@ class ReponseController extends Controller
 
         $reponse = Demande::find($demand_id)->reponses()->where('user_id', Auth::id())->first();
         if ($reponse) {
-//            $url = $reponse->image ? "storage/" . $reponse->image->url : '';
-            $url = $reponse->demande->getMedia()[0]->getUrl();
-            return response()->json(["reponse" => $reponse,
-                "image" => asset($url)
+            // $url = $reponse->demande->getMedia()[0]->getUrl();
+            return response()->json([
+                "reponse" => $reponse,
+                "image" => ''//asset($url)
             ]);
         }
         return response()->json(['message' => 'Not Found!'], 404);
@@ -123,7 +124,6 @@ class ReponseController extends Controller
             if ($reponse->image) {
                 $reponse->image->deleteImage();
                 $reponse->image->delete();
-
             }
             $reponse->delete();
         }

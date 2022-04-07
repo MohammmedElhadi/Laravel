@@ -136,49 +136,51 @@ class Demande extends Model implements HasMedia
          */
 
         if ($type->id == 2)  //  leger
-        {/*
-            if(count($this->subcategories))
-            {
-                $subcategory = $this->subcategories[0];
-                foreach ($subcategory->interesters as $user)
+        {
+                foreach ($this->subcategories as $subcategory) {
+                    foreach ($subcategory->interesters as $user)
+                        {
+                            if (!in_array($user->id , $ids) and $user->id != $demander->id
+                                and ($user->modeles->intersect($modeles)->isNotEmpty()))
+                            {
+                                array_push($ids ,$user->id);
+                                $user->notify(new ModeleNotification($this));
+                                $notification = $user->unreadNotifications()->latest()->first();
+                                event(new NewDemandeAdded($notification));
+                            }
+                            if (!in_array($user->id , $ids) and $user->id != $demander->id
+                                and ($user->marques->intersect($marques)->isNotEmpty()))
+                            {
+                                array_push($ids ,$user->id);
+                                $user->notify(new MarqueNotification($this));
+                                $notification = $user->unreadNotifications()->latest()->first();
+                                event(new NewDemandeAdded($notification));
+                            }
+                        }
+                }
+                foreach ($this->categories as $category)
+                {
+                    foreach ($category->interesters as $user)
                     {
                         if (!in_array($user->id , $ids) and $user->id != $demander->id
                             and ($user->modeles->intersect($modeles)->isNotEmpty()))
                         {
-
                             array_push($ids ,$user->id);
                             $user->notify(new ModeleNotification($this));
+                            $notification = $user->unreadNotifications()->latest()->first();
+                            event(new NewDemandeAdded($notification));
                         }
                         if (!in_array($user->id , $ids) and $user->id != $demander->id
-                            and ($user->marques->intersect($marques)->isNotEmpty()))
+                        and ($user->marques->intersect($marques)->isNotEmpty()))
                         {
                             array_push($ids ,$user->id);
                             $user->notify(new MarqueNotification($this));
+                            $notification = $user->unreadNotifications()->latest()->first();
+                            event(new NewDemandeAdded($notification));
                         }
                     }
-            }
-            if( count($this->categories))
-            {
-
-                $category = $this->categories[0];
-                foreach ($category->interesters as $user)
-                {
-                    if (!in_array($user->id , $ids) and $user->id != $demander->id
-                        and ($user->modeles->intersect($modeles)->isNotEmpty()))
-                    {
-
-                        array_push($ids ,$user->id);
-                        $user->notify(new ModeleNotification($this));
-                    }
-                    if (!in_array($user->id , $ids) and $user->id != $demander->id
-                    and ($user->marques->intersect($marques)->isNotEmpty()))
-                    {
-                        array_push($ids ,$user->id);
-                        $user->notify(new MarqueNotification($this));
-                    }
                 }
-            }
-        */}
+        }
 
         else
             {
@@ -188,7 +190,8 @@ class Demande extends Model implements HasMedia
                 {
                     array_push($ids ,$user->id);
                     $user->notify(new TypeNotification($this));
-                    event(new NewDemandeAdded($this , $user->id));
+                    $notification = $user->unreadNotifications()->latest()->first();
+                    event(new NewDemandeAdded($notification));
                 }
             }
             }
