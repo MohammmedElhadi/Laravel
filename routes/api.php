@@ -3,6 +3,7 @@
 use api\TypeController;
 use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\auth\LoginController as Lcont;
+use App\Http\Controllers\api\ContinentController;
 use App\Http\Controllers\api\DemandeController;
 use App\Http\Controllers\api\EtatController;
 use App\Http\Controllers\api\MarqueController;
@@ -87,6 +88,7 @@ Route::controller(UserController::class)->group(function () {
 
     Route::resource('demande', DemandeController::class);
     Route::resource('type', ApiTypeController::class);
+    Route::resource('continent', ContinentController::class);
     Route::resource('marque', MarqueController::class);
     Route::resource('modele', ModeleController::class);
     Route::resource('category', CategoryController::class);

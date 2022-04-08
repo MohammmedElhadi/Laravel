@@ -34,8 +34,8 @@ class TypeSeeder extends Seeder
             'nom_ar'=> 'الحـافلات'
         ]);
         Type::create([
-            'nom_fr' => 'Travaux',
-            'nom_ar'=> 'الحـافلات'
+            'nom_fr' => 'Engin',
+            'nom_ar'=> 'الأشغال العمومية'
         ]);
         Type::create([
             'nom_fr' => 'ُMatériel agricole',

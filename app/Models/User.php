@@ -99,11 +99,11 @@ class User extends Authenticatable
     }
     public function subcategories2()
     {
-        return $this->morphedByMany(SUbcategory2::class , 'interrestable')->withTimestamps();
+        return $this->morphedByMany(Subcategory2::class , 'interrestable')->withTimestamps();
     }
-    public function nationalities()
+    public function continents()
     {
-        return $this->morphedByMany(Nationality::class , 'interrestable')->withTimestamps();
+        return $this->morphedByMany(Continent::class , 'interrestable')->withTimestamps();
     }
     public function marques()
     {

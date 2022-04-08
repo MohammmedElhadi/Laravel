@@ -23,9 +23,9 @@ class Marque extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function nationality()
+    public function continent()
     {
-        return $this->belongsTo(Nationality::class);
+        return $this->belongsTo(Continent::class);
     }
     public function interesters()
     {
