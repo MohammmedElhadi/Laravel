@@ -2,21 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Events\NewDemandeAdded;
-use App\Events\NewReponseAdded;
+
 use App\Http\Controllers\Controller;
 use App\Models\Demande;
-use App\Models\Image;
 use App\Models\Reponse;
-use App\Models\User;
-use App\Notifications\ReponseNotification;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class DemandeController extends Controller
 {
@@ -50,6 +43,7 @@ class DemandeController extends Controller
      */
     public function store(Request $request)
     {
+        // return response()->json($request, 500);
         DB::beginTransaction();
         try {
             $demande = Demande::create([
@@ -62,10 +56,11 @@ class DemandeController extends Controller
             // $demande->addMedia($request->images)->preservingOriginal()->toMediaCollection('demand_images');
             if ($request->images) {
                 foreach (explode(',', $request->images) as $key => $image) {
-                    $demande->addMedia($image)->toMediaCollection('demand_images');
+                    $demande->addMedia($image)->preservingOriginal()->toMediaCollection('demand_images');
                 }
             }
             $demande->types()->attach($request['type']);
+            $demande->continents()->attach($request['continent']);
             $demande->categories()->attach(explode(',', $request['categories']));
             if ($request['subcategories']) {
                 $demande->subcategories()->attach(explode(',', $request['subcategories']));

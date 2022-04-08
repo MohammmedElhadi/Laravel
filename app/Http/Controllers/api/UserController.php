@@ -39,8 +39,11 @@ class UserController extends Controller
      */
     public function store(Request $data)
     {
-        DB::beginTransaction();
 
+        if(count(User::where('phone' , $data['phone'])->get())>0){
+            return response()->json('already registred' , 419);
+        }
+        DB::beginTransaction();
         $user =  User::create([
             'name' => $data['name'],
             // 'email' => $data['email'],
@@ -49,6 +52,7 @@ class UserController extends Controller
             'wilaya_id' => $data['wilaya']
         ]);
         $user->types()->attach($data['types']);
+        $user->continents()->attach($data['continents']);
         $user->marques()->attach($data['marques']);
         $user->modeles()->attach($data['modeles']);
         $user->categories()->attach($data['categories']);
@@ -73,6 +77,7 @@ class UserController extends Controller
        $user->subcategories->pluck('subcategories.id');
        $user->subcategories2->pluck('subcategory2s.id');
        $user->types->pluck('types.id');
+       $user->continents->pluck('continents.id');
        $user->marques->pluck('marques.id');
        $user->modeles->pluck('modeles.id');
 
@@ -122,6 +127,7 @@ class UserController extends Controller
             'wilaya_id' => $data['wilaya']
         ]);
         $user->types()->sync($data['types']);
+        $user->continents()->sync($data['continents']);
         $user->marques()->sync($data['marques']);
         $user->modeles()->sync($data['modeles']);
         $user->categories()->sync($data['categories']);
