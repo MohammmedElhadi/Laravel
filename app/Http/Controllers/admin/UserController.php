@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Marque;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class MarqueController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,10 @@ class MarqueController extends Controller
      */
     public function index()
     {
-        return response()->json( Marque::all());
+        return response()->json(User::all()->each(function($user) {
+            $user->demandes;
+            $user->types;
+        }), 200);
     }
 
     /**
@@ -50,7 +53,6 @@ class MarqueController extends Controller
         //
     }
 
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -84,16 +86,4 @@ class MarqueController extends Controller
     {
         //
     }
-
-    public function getModeles(Request $ids)
-    {
-        $models = array();
-        $marques = Marque::find($ids);
-
-        foreach ($marques as $marque){
-            $models = array_merge($models , $marque->modeles->toArray() );
-        }
-        return response()->json($models);
-    }
-
 }
