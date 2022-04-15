@@ -178,7 +178,10 @@ class DemandeController extends Controller
 
     public function SubmitOffer(Request $request)
     {
-        // dd($request);
+
+        if ( !Auth::check()) {
+            return response()->json('Login please' , 419);
+        }
         DB::beginTransaction();
         try {
             $offer = Reponse::create([
@@ -197,8 +200,6 @@ class DemandeController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-
-            return response()->json('Login please' , 419);
         }
         if ($offer) {
             $offer->notify_demander();
@@ -251,7 +252,7 @@ class DemandeController extends Controller
     }
 
 
-    private function getDemandesResponse($demandes)
+    public static function getDemandesResponse($demandes)
     {
         $data = [];
         // dd($demandes);
@@ -268,6 +269,7 @@ class DemandeController extends Controller
                 'subcategory2s' => $demande->subcategory2s ? $demande->subcategory2s : '',
                 'marques' => $demande->marques ? $demande->marques : '',
                 'modeles' => $demande->modeles ? $demande->modeles : '',
+                'continents' => $demande->continents ? $demande->continents : '',
                 'images' => $images,
                 'responded' => Auth::check() ? Auth::user()->reponses()->where('demande_id', $demande->id)->count() > 0 : false,
                 "is_saved" => (Auth::check() and  $demande->viewers()->where('user_id', Auth::id())->count() > 0)

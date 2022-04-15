@@ -37,7 +37,7 @@ class ReponseController extends Controller
     /**
      * Get my offer on this demande
      */
-    public function getMyOffer($demand_id)
+    public static function getMyOffer($demand_id)
     {
 
         $reponse = Demande::find($demand_id)->reponses()->where('user_id', Auth::id())->first();

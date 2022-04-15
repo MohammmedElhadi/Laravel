@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('wilaya_id')->constrained()
                                           ->onUpdate('cascade')
                                           ->onDelete('cascade')->default(4);
-            $table->string('is_admin')->default(false);
+            $table->boolean('is_admin')->default(false);
             $table->string('phone')->unique();
             $table->enum('lang' , ['fr' , 'ar' , 'dz'])->default('ar');
             // $table->string('email')->unique();

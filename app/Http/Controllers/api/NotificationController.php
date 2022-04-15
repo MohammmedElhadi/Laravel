@@ -17,7 +17,7 @@ class NotificationController extends Controller
     public function index()
     {
         return  response()->json([
-            'notifications' => Auth::user()->unreadNotifications()->latest()->take(50)->get(),
+            'notifications' => Auth::user()->notifications()->latest()->take(50)->get(),
             'count'         => Auth::user()->unreadNotifications()->count()
         ]);
     }

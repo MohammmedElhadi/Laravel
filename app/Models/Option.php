@@ -5,13 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Wilaya extends Model
+class Option extends Model
 {
     use HasFactory;
-
-    public function demandes()
-    {
-        return $this->hasMany(Demande::class );
-    }
-
 }
