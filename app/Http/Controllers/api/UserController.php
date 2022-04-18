@@ -39,9 +39,8 @@ class UserController extends Controller
      */
     public function store(Request $data)
     {
-
         if(count(User::where('phone' , $data['phone'])->get())>0){
-            return response()->json('already registred' , 419);
+            return response()->json(['message' => 'already_registred'] , 422);
         }
         DB::beginTransaction();
         $user =  User::create([
@@ -52,6 +51,7 @@ class UserController extends Controller
             'wilaya_id' => $data['wilaya']
         ]);
         $user->types()->attach($data['types']);
+        $user->professions()->attach($data['professions']);
         $user->continents()->attach($data['continents']);
         $user->marques()->attach($data['marques']);
         $user->modeles()->attach($data['modeles']);

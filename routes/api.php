@@ -11,6 +11,7 @@ use App\Http\Controllers\api\FilterController;
 use App\Http\Controllers\api\MarqueController;
 use App\Http\Controllers\api\ModeleController;
 use App\Http\Controllers\api\NotificationController;
+use App\Http\Controllers\api\ProfessionController;
 use App\Http\Controllers\api\SubcategoryController;
 use App\Http\Controllers\api\SubCategory2Controller;
 use App\Http\Controllers\api\TypeController as ApiTypeController;
@@ -105,6 +106,7 @@ Route::controller(UserController::class)->group(function () {
 
 Route::resource('demande', DemandeController::class);
 Route::resource('type', ApiTypeController::class);
+Route::resource('profession', ProfessionController::class);
 Route::resource('continent', ContinentController::class);
 Route::resource('marque', MarqueController::class);
 Route::resource('modele', ModeleController::class);
