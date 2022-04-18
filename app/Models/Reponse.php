@@ -47,5 +47,6 @@ class Reponse extends Model implements HasMedia
         $demander->notify(New ReponseNotification($this));
         $notification = $demander->unreadNotifications()->latest()->first();
         event(new NewReponseAdded($notification));
+        return true;
     }
 }

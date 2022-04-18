@@ -134,6 +134,15 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Wilaya::class);
     }
+    /**
+     * The professions that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function professions()
+    {
+        return $this->belongsToMany(Profession::class)->withTimestamps();
+    }
 
 
 }

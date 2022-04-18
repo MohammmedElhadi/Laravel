@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api\auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+
 class LoginController extends Controller
 {
     /**
@@ -16,16 +18,19 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
 
+        $user = User::where('phone' ,'=', $request->phone)->get();
+        if($user->isEmpty()){
+            return response()->json(['message' => 'user_not_found'], 422);
+        }
         $credentials = $request->validate([
             'phone' => ['required'],
             'password' => ['required'],
         ]);
-        // dd(Auth::attempt($credentials));
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return Auth::user();
         }
-        return response()->json(null , 401);
+        return response()->json(['message' => 'credentials'] , 401);
 
     }
 

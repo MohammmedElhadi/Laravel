@@ -178,33 +178,33 @@ class DemandeController extends Controller
 
     public function SubmitOffer(Request $request)
     {
-
         if ( !Auth::check()) {
-            return response()->json('Login please' , 419);
-        }
-        DB::beginTransaction();
-        try {
-            $offer = Reponse::create([
-                'user_id' => Auth::id(),
-                'demande_id' => $request->demande_id,
-                'wilaya_id' => $request->wilaya_id,
-                'etat_id' => $request->etat_id,
-                'prix_offert' => $request->prix_offert,
-                'note' => $request->note,
-            ]);
-            if ($request->images != "") {
-                foreach (explode(',', $request->images) as $key => $image) {
-                    $offer->addMedia($image)->toMediaCollection('offer_images');
+                    return response()->json('Login please' , 419);
                 }
+        $offer = Reponse::create([
+            'user_id' => Auth::id(),
+            'demande_id' => $request->demande_id,
+            'wilaya_id' => $request->wilaya_id,
+            'etat_id' => $request->etat_id,
+            'prix_offert' => $request->prix_offert,
+            'note' => $request->note,
+        ]);
+            if ($offer) {
+                if ($request->images != "") {
+                    foreach (explode(',', $request->images) as $key => $image) {
+                        $offer->addMedia($image)->toMediaCollection('offer_images');
+                    }
+                }
+                $images = [];
+                foreach ($offer->getMedia('offer_images') as $key => $image) {
+                    array_push($images, ['imageURL' => $image->getFullUrl()]);
+                }
+                $offer->notify_demander();
+                 return response()->json(['offer' =>$offer , 'images' => $images] , 200);
             }
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-        }
-        if ($offer) {
-            $offer->notify_demander();
-        }
-        return response()->json($offer);
+            else {
+                return response()->json('error' , 444);
+            }
     }
 
     public function MarkAsSeen($id)

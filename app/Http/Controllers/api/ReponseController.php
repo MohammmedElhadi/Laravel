@@ -41,12 +41,12 @@ class ReponseController extends Controller
     {
 
         $reponse = Demande::find($demand_id)->reponses()->where('user_id', Auth::id())->first();
-        $images = [];
+
+        if ($reponse) {
+            $images = [];
             foreach ($reponse->getMedia('offer_images') as $key => $image) {
                 array_push( $images , ['imageURL' => $image->getFullUrl()]);
             }
-        if ($reponse) {
-            // $url = $reponse->demande->getMedia()[0]->getUrl();
             return response()->json([
                 "reponse" => $reponse,
                 "images" => $images
