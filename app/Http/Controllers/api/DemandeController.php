@@ -178,6 +178,8 @@ class DemandeController extends Controller
 
     public function SubmitOffer(Request $request)
     {
+        // return response()->json('Login please' , 419);
+
         if ( !Auth::check()) {
                     return response()->json('Login please' , 419);
                 }
@@ -200,7 +202,8 @@ class DemandeController extends Controller
                     array_push($images, ['imageURL' => $image->getFullUrl()]);
                 }
                 $offer->notify_demander();
-                 return response()->json(['offer' =>$offer , 'images' => $images] , 200);
+                //  return response()->json(['offer' =>$offer , 'images' => $images] , 200);
+
             }
             else {
                 return response()->json('error' , 444);

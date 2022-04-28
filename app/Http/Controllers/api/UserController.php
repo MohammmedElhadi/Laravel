@@ -60,8 +60,8 @@ class UserController extends Controller
         $user->subcategories2()->attach($data['subsubcategories']);
 
         DB::commit();
-        Auth::login($user);
-        return response()->json(Auth::user());
+        // Auth::login($user);
+        return response()->json('created' , 200);
     }
 
     /**

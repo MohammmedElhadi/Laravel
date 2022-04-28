@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Demande;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class DemandeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->json(User::all()->each(function($user) {
-            $user->demandes;
-            $user->types;
+        return response()->json(Demande::all()->
+        each(function($demande){
+            $demande->reponses;
+            $demande->demander;
+            $demande->types;
         }), 200);
     }
 
@@ -73,15 +75,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-        $user = User::find($id);
-        if ($user) {
-            $user->update([
-                'is_actif' => $request['is_actif']
-            ]);
-            return response()->json(["success" => "updated" ] , 200);
-        }
-
+        //
     }
 
     /**
@@ -92,6 +86,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $demande = Demande::find($id);
+        if($demande){
+            $demande->delete();
+            return response()->json(["success" => "updated" ] , 200);
+        }
+            return response()->json(["message" => "error" ] , 444);
     }
 }

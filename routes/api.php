@@ -1,6 +1,7 @@
 <?php
 
 use api\TypeController;
+use App\Http\Controllers\admin\DemandeController as AdminDemandeController;
 use App\Http\Controllers\admin\UserController as AdminUserController;
 use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\auth\LoginController as Lcont;
@@ -124,5 +125,6 @@ Route::resource('notification', NotificationController::class);
  */
 Route::group(['prefix'=>'admin'], function() {
     Route::resource('user', AdminUserController::class);
+    Route::resource('demande', AdminDemandeController::class);
 })
 ;
