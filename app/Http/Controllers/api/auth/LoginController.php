@@ -18,14 +18,19 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
 
-        $user = User::where('phone' ,'=', $request->phone)->get();
+        $user = User::where('phone' ,'=', $request->phone)
+                 ->get();
         if($user->isEmpty()){
             return response()->json(['message' => 'user_not_found'], 422);
         }
+
         $credentials = $request->validate([
             'phone' => ['required'],
             'password' => ['required'],
         ]);
+        if(!$user[0]->is_actif){
+            return response()->json(['message' => 'disactive_account'] , 401);
+        }
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return Auth::user();

@@ -2,6 +2,7 @@
 
 use api\TypeController;
 use App\Http\Controllers\admin\DemandeController as AdminDemandeController;
+use App\Http\Controllers\admin\MarqueController as AdminMarqueController;
 use App\Http\Controllers\admin\UserController as AdminUserController;
 use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\auth\LoginController as Lcont;
@@ -23,6 +24,7 @@ use App\Http\Controllers\api\WilayaController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\UploadController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Broadcast;
@@ -125,5 +127,6 @@ Route::resource('notification', NotificationController::class);
 Route::group(['prefix'=>'admin'], function() {
     Route::resource('user', AdminUserController::class);
     Route::resource('demande', AdminDemandeController::class);
+    Route::resource('marque', AdminMarqueController::class);
 })
 ;

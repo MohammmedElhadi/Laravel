@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Demande;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DemandeController extends Controller
 {
@@ -15,6 +16,7 @@ class DemandeController extends Controller
      */
     public function index()
     {
+        if(Auth::user()->is_admin)
         return response()->json(Demande::all()->
         each(function($demande){
             $demande->reponses;
