@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Marque;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
+class MarqueController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,10 +17,7 @@ class UserController extends Controller
     public function index()
     {
         if(Auth::user()->is_admin)
-        return response()->json(User::all()->each(function($user) {
-            $user->demandes;
-            $user->types;
-        }), 200);
+        return response()->json(Marque::all(), 200);
     }
 
     /**
@@ -41,7 +38,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Marque::create([
+            "nom_ar" => $request->nom,
+            "nom_fr" => $request->nom,
+            "logo" => $request->logo,
+            'url' => strval(rand(10000000,500000000)),
+            'url_hash' => strval(rand(10000000,500000000)),
+        ]);
+        return response()->json(['message' , 'created' , 200]);
     }
 
     /**
@@ -75,15 +79,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-        $user = User::find($id);
-        if ($user) {
-            $user->update([
-                'is_actif' => $request['is_actif']
-            ]);
-            return response()->json(["success" => "updated" ] , 200);
-        }
-
+        //
     }
 
     /**

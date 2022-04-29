@@ -24,6 +24,7 @@ class User extends Authenticatable
         'wilaya_id',
         'phone',
         'password',
+        'is_actif'
     ];
 
     /**

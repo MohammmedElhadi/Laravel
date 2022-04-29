@@ -3,23 +3,20 @@
 namespace App\Models;
 
 use App\Events\NewDemandeAdded;
-use App\Notifications\CategoryNotification;
 use App\Notifications\MarqueNotification;
 use App\Notifications\ModeleNotification;
-use App\Notifications\ReponseChoosenNotification;
-use App\Notifications\SubcategoryNotification;
 use App\Notifications\TypeNotification;
-// use App\Notifications\PieceNotification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Demande extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia, SoftDeletes;
     protected $guarded = [];
 
     public function categories()

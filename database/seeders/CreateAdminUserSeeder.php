@@ -22,6 +22,7 @@ class CreateAdminUserSeeder extends Seeder
             'phone' => '0659403798',
             // 'email' => 'admin@autoparts.com',
             'is_admin' => true,
+            'is_actif' => true,
             'password' => bcrypt('password')
         ]);
 
@@ -40,6 +41,7 @@ class CreateAdminUserSeeder extends Seeder
             'phone' => '0659403898',
             // 'email' => 'user2@autoparts.com',
             'is_admin' => false,
+            'is_actif' => true,
             'password' => bcrypt('password')
         ]);
         $role = Role::create(['name' => 'Simple-user']);

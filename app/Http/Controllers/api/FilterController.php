@@ -47,8 +47,8 @@ class FilterController extends Controller
                 )
             );
         });
-        // dd($demandes);
-        $data = DemandeController::getDemandesResponse($demandes);
+
+        $data = DemandeController::getDemandesResponseOLD($demandes);
         return $data;
     }
     /**
@@ -60,35 +60,35 @@ class FilterController extends Controller
     public function showTypes($id)
     {
         $type  = Type::find($id);
-        $demandes = $type->demandes;
+        $demandes = $type->demandes()->paginate(1);
         $data = DemandeController::getDemandesResponse($demandes);
         return $data;
     }
     public function showContinents($id)
     {
         $continent  = Continent::find($id);
-        $demandes = $continent->demandes;
+        $demandes = $continent->demandes()->paginate(10);
         $data = DemandeController::getDemandesResponse($demandes);
         return $data;
     }
     public function showCategories($id)
     {
         $category  = Category::find($id);
-        $demandes = $category->demandes;
+        $demandes = $category->demandes()->paginate(10);
         $data = DemandeController::getDemandesResponse($demandes);
         return $data;
     }
     public function showSubcategories($id)
     {
         $subcategory  = Subcategory::find($id);
-        $demandes = $subcategory->demandes;
+        $demandes = $subcategory->demandes()->paginate(10);
         $data = DemandeController::getDemandesResponse($demandes);
         return $data;
     }
     public function showSubcategories2($id)
     {
         $subcategory2  = Subcategory2::find($id);
-        $demandes = $subcategory2->demandes;
+        $demandes = $subcategory2->demandes()->paginate(10);
         $data = DemandeController::getDemandesResponse($demandes);
         return $data;
     }
@@ -96,7 +96,7 @@ class FilterController extends Controller
     public function showMarques($id)
     {
         $marque  = Marque::find($id);
-        $demandes = $marque->demandes;
+        $demandes = $marque->demandes()->paginate(10);
         $data = DemandeController::getDemandesResponse($demandes);
         return $data;
     }
@@ -104,21 +104,21 @@ class FilterController extends Controller
     {
 
         $modele  = Modele::find($id);
-        $demandes = $modele->demandes;
+        $demandes = $modele->demandes()->paginate(10);
         $data = DemandeController::getDemandesResponse($demandes);
         return $data;
     }
     public function showWilayas($id)
     {
         $wilaya  = Wilaya::find($id);
-        $demandes = $wilaya->demandes;
+        $demandes = $wilaya->demandes()->paginate(10);
         $data = DemandeController::getDemandesResponse($demandes);
         return $data;
     }
     public function showEtats($id)
     {
         $etat  = Etat::find($id);
-        $demandes = $etat->demandes;
+        $demandes = $etat->demandes()->paginate(10);
         $data = DemandeController::getDemandesResponse($demandes);
         return $data;
     }

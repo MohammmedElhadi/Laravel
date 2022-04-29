@@ -20,7 +20,7 @@ class DemandeController extends Controller
      */
     public function index()
     {
-        $demandes = Demande::orderBy('created_at', "desc")->get();
+        $demandes = Demande::orderBy('created_at', "desc")->paginate(10);
         $data = $this->getDemandesResponse($demandes);
         return $data;
     }
@@ -95,7 +95,7 @@ class DemandeController extends Controller
     {
         $demande = Demande::where('id' , $id)->get();
         if($demande){
-            $data = $this->getDemandesResponse($demande);
+            $data = $this->getDemandesResponseOLD($demande);
             return response()->json($data);
         }
         return response()->json(['Demande supprimée'], 404);
@@ -141,7 +141,7 @@ class DemandeController extends Controller
      */
     public function myDemandes()
     {
-        $demandes = Auth::user()->demandes;
+        $demandes = Auth::user()->demandes()->paginate(10);
         $data = $this->getDemandesResponse($demandes);
         return $data;
     }
@@ -149,7 +149,7 @@ class DemandeController extends Controller
     show the demandes that I have seen*/
     public function DemandesVues()
     {
-        $demandes = Auth::user()->viewedDemandes;
+        $demandes = Auth::user()->viewedDemandes()->paginate(10);
         $data = $this->getDemandesResponse($demandes);
         return $data;
     }
@@ -157,19 +157,31 @@ class DemandeController extends Controller
     show the demandes that I have liked*/
     public function DemandesAime()
     {
-        $demandes = Auth::user()->viewedDemandes()->wherePivot('is_saved', 1)->get();
+        $demandes = Auth::user()->viewedDemandes()->wherePivot('is_saved', 1)->paginate(10);
         $data = $this->getDemandesResponse($demandes);
         return $data;
     }
 
     public function Demandesrepondue()
     {
-        $reponses = Auth::user()->reponses;
+        // $demandes = DB::table('demandes')->join('reponses' , 'demandes.id' , 'reponses.demande_id')
+        //                                  ->where('reponses.user_id' , Auth::id())
+        //                                  ->get();
+                                        //  ->get('demandes.id');
+        // dd($query->get());
+        // $demandes = Demande::find( ($query)->toArray());
+        // return response()->json(Demande::hydrate($demandes),500);
+
+        // $demandes = Demande::fromSub($query, Demande::make()->getTable());
+
+
+        $reponses = Auth::user()->reponses()->with('demande')->get();//->paginate(10);
+        // dd($reponses);
         $demandes = [];
         foreach ($reponses as $key => $reponse) {
             array_push($demandes, $reponse->demande);
         }
-        $data = $this->getDemandesResponse($demandes);
+        $data = $this->getDemandesResponseOLD($demandes);
         return $data;
     }
 
@@ -178,6 +190,8 @@ class DemandeController extends Controller
 
     public function SubmitOffer(Request $request)
     {
+        // return response()->json('Login please' , 419);
+
         if ( !Auth::check()) {
                     return response()->json('Login please' , 419);
                 }
@@ -200,7 +214,8 @@ class DemandeController extends Controller
                     array_push($images, ['imageURL' => $image->getFullUrl()]);
                 }
                 $offer->notify_demander();
-                 return response()->json(['offer' =>$offer , 'images' => $images] , 200);
+                //  return response()->json(['offer' =>$offer , 'images' => $images] , 200);
+
             }
             else {
                 return response()->json('error' , 444);
@@ -212,7 +227,6 @@ class DemandeController extends Controller
         $demande = Demande::find($id);
         if ($demande) {
             $viewedDemande = Auth::user()->viewedDemandes()->where('demande_id', $id)->first();
-
             if (!$viewedDemande) {
                 Auth::user()->viewedDemandes()->attach([$id => ['is_saved' => false]]);
                 $viewedDemande = Auth::user()->viewedDemandes()->where('demande_id', $id)->first();
@@ -223,7 +237,10 @@ class DemandeController extends Controller
             ]);
 
             $demande->viewers()->attach([Auth::id() => ['is_saved' => false]]);
-            return ($demande->viewers[0]->pivot->is_saved);
+            return response()->json([
+                'is_saved' => $demande->viewers[0]->pivot->is_saved,
+                'likes'    => Demande::find($id)->viewers()->wherePivot('is_saved', 1)->count()
+            ]);
         }
         else {
             return response()->json(['Demande supprimée'], 404);
@@ -250,13 +267,10 @@ class DemandeController extends Controller
             ]);
         }
     }
-
-
-    public static function getDemandesResponse($demandes)
+    public static function getDemandesResponseOLD($demandes)
     {
         $data = [];
-        // dd($demandes);
-        foreach ($demandes as $demande) {
+         foreach ($demandes as $demande) {
             $images = [];
             foreach ($demande->getMedia('demand_images') as $key => $image) {
                 array_push($images, ['imageURL' => $image->getFullUrl()]);
@@ -282,5 +296,69 @@ class DemandeController extends Controller
             ]);
         }
         return $data;
+    }
+
+    public static function getDemandesResponse($demandes)
+    {
+        $data = [];
+        // // dd($demandes);
+
+        // $demandes->each(function ( $demande){
+        //     $demande->types;
+        //     $demande->marques;
+        //     $demande->modeles;
+        //     $demande->categories;
+        //     $demande->subcategories;
+        //     $demande->subcategory2s;
+        //     $demande->continents;
+        //     $demande->getMedia('demand_images');
+        //     Auth::check() ? Auth::user()->reponses()->where('demande_id', $demande->id)->count() > 0 : false;
+        //     (Auth::check() and  $demande->viewers()->where('user_id', Auth::id())->count() > 0)
+        //     ?
+        //     $demande->viewers()->where('user_id', Auth::id())->first()->pivot->is_saved
+        //     :
+        //     false;
+        //     $demande->viewers()->wherePivot('is_saved', 1)->count();
+        //  });
+
+        //  return response()->json($demandes);
+         foreach ($demandes as $demande) {
+            $images = [];
+            foreach ($demande->getMedia('demand_images') as $key => $image) {
+                array_push($images, ['imageURL' => $image->getFullUrl()]);
+            }
+            array_push($data, [
+                'demande' => $demande,
+                'type' => $demande->types ? $demande->types[0] : '',
+                'categories' => $demande->categories ? $demande->categories : '',
+                'subcategories' => $demande->subcategories ? $demande->subcategories : '',
+                'subcategory2s' => $demande->subcategory2s ? $demande->subcategory2s : '',
+                'marques' => $demande->marques ? $demande->marques : '',
+                'modeles' => $demande->modeles ? $demande->modeles : '',
+                'continents' => $demande->continents ? $demande->continents : '',
+                'images' => $images,
+                'responded' => Auth::check() ? Auth::user()->reponses()->where('demande_id', $demande->id)->count() > 0 : false,
+                "is_saved" => (Auth::check() and  $demande->viewers()->where('user_id', Auth::id())->count() > 0)
+                    ?
+                    $demande->viewers()->where('user_id', Auth::id())->first()->pivot->is_saved
+                    :
+                    false,
+                'likes'   => $demande->viewers()->wherePivot('is_saved', 1)->count(),
+
+            ]);
+        }
+        $response = [
+            'pagination' => [
+               'total' => $demandes->total(),
+               'per_page' => $demandes->perPage(),
+               'current_page' => $demandes->currentPage(),
+               'last_page' => $demandes->lastPage(),
+               'from' => $demandes->firstItem(),
+               'to' => $demandes->lastItem()
+            ],
+            'data' => $data
+        ];
+        return response()->json($response);
+        // return $data;
     }
 }
