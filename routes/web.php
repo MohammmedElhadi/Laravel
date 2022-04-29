@@ -18,14 +18,8 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/test', function () {
-    $demand = Reponse::find(3);
-    // $demand = Demande::find(1);
-    $images= [];
-    // dd($demand->getMedia('demand_images'));
-    foreach ($demand->getMedia('offer_images') as $key => $image) {
-        array_push( $images , $image->getFullUrl());
-    }
-    dd($images);
+    $demandes = Demande::paginate(40)->with('categories:id');
+    dd($demandes);
 });
 //
 //// Auth::routes();

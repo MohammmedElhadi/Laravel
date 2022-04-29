@@ -74,7 +74,6 @@ Route::controller(DemandeController::class)->group(function () {
     Route::get('demande/demandesrepondu', 'Demandesrepondue');//('demande.mine');
     Route::get('demande/{id}/markAsSeen', 'MarkAsSeen');//('demande.markAsSeen');
     Route::get('demande/{id}/ToggleSaved', 'ToggleSaved');//('demande.ToggleSaved');
-
 });
 Route::controller(ReponseController::class)->group(function () {
     Route::get('reponse/{id}', 'getMyOffer');
