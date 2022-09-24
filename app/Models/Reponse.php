@@ -43,10 +43,16 @@ class Reponse extends Model implements HasMedia
         return $this->belongsTo(Etat::class);
     }
     public function notify_demander(){
+        try {
+            //code...
+
         $demander = $this->demande->demander;
         $demander->notify(New ReponseNotification($this));
         $notification = $demander->unreadNotifications()->latest()->first();
         event(new NewReponseAdded($notification));
         return true;
+      } catch (\Throwable $th) {
+            return false;
+        }
     }
 }

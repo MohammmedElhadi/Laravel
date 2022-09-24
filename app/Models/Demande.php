@@ -136,6 +136,7 @@ class Demande extends Model implements HasMedia
          * donc si le type  de la piece demandé s'agit d'une voitue on notifie selon la categorie
          * sinon on notifie tous les vendeur qui sont interessés par le type et le continent
          */
+try {
 
         if ($type->id == 2)  //  leger
         {
@@ -218,5 +219,10 @@ class Demande extends Model implements HasMedia
                 }
             }
         }
-    }
+      //code...
+} catch (\Throwable $th) {
+    return;
 }
+}
+}
+
