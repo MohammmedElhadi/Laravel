@@ -81,7 +81,6 @@ class DemandeController extends Controller
         }
         if ($demande)
             $demande->notify_interresters();
-
         return response()->json($demande->id);
     }
 
