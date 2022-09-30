@@ -19,7 +19,8 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['frontend.auto_parts.local','https://app.safyauto.com' ,'*'],
+    // 'allowed_origins' => ['frontend.auto_parts.local','https://app.safyauto.com' ,'*'],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => ['*'],
 
